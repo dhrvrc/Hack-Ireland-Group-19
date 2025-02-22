@@ -27,7 +27,8 @@ export function ChatInterface() {
         "http://127.0.0.1:8000/prompts/",
         { prompt: input }, // Correct JSON payload
         { headers: { "Content-Type": "application/json" } } // Ensure JSON format
-      );
+    );
+    console.log("Hello", response.data.reply);
 
       // Replace "..." with actual AI response
       setMessages((prev) =>
