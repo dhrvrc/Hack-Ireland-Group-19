@@ -1,0 +1,13 @@
+uvicorn
+openai
+pydantic
+django
+dotenv
+django-cors-headers
+django-filter
+django-log-request-id
+django-model-utils
+django-request-logging
+django-storages
+djangorestframework
+djangorestframework-simplejwt
