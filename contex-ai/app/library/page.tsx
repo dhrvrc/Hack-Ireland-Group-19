@@ -1,25 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Copy, LayoutGrid } from "lucide-react";
 import { LibrarySidebar } from "@/components/library-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
 
+// Import Agent UI Components
+import { AgentButton } from "@/components/agent-ui/AgentButton";
+import { AgentCard } from "@/components/agent-ui/AgentCard";
+import { AgentInput } from "@/components/agent-ui/AgentInput";
+
 const components = [
   {
     name: "Button",
-    code: `<Button className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</Button>`,
+    code: `<AgentButton className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</AgentButton>`,
   },
   {
     name: "Card",
-    code: `<Card className="p-6 border border-gray-700 bg-gray-900 text-white">This is a card.</Card>`,
+    code: `<AgentCard className="p-6 border border-gray-700 bg-gray-900 text-white">This is a card.</AgentCard>`,
   },
   {
     name: "Input",
-    code: `<Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />`,
+    code: `<AgentInput className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />`,
   },
 ];
 
@@ -49,18 +51,39 @@ export default function LibraryPage() {
               <div key={component.name} className="bg-gray-900 p-4 rounded-lg border border-gray-800">
                 <div className="flex justify-between items-center mb-3">
                   <h2 className="text-lg font-semibold text-white">{component.name}</h2>
-                  <Button
+                  <AgentButton
+                    controlId="copy-button"
                     variant="ghost"
                     onClick={() => handleCopy(component.code, component.name)}
                     className="text-gray-400 hover:text-white"
                   >
                     <Copy className="h-5 w-5" />
-                  </Button>
+                  </AgentButton>
                 </div>
                 <div className="p-4 bg-gray-800 rounded-md">
-                  {component.name === "Button" && <Button className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</Button>}
-                  {component.name === "Card" && <Card className="p-6 border border-gray-700 bg-gray-900 text-white">This is a card.</Card>}
-                  {component.name === "Input" && <Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />}
+                  {component.name === "Button" && (
+                    <AgentButton
+                      controlId="demo-button"
+                      className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md"
+                    >
+                      Click Me
+                    </AgentButton>
+                  )}
+                  {component.name === "Card" && (
+                    <AgentCard
+                      controlId="demo-card"
+                      className="p-6 border border-gray-700 bg-gray-900 text-white"
+                    >
+                      This is a card.
+                    </AgentCard>
+                  )}
+                  {component.name === "Input" && (
+                    <AgentInput
+                      controlId="demo-input"
+                      className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md"
+                      placeholder="Type here..."
+                    />
+                  )}
                 </div>
                 {copied === component.name && <p className="mt-2 text-sm text-green-400">Copied!</p>}
               </div>
