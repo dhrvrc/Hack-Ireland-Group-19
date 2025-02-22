@@ -46,8 +46,8 @@ import {
             controlId,
             elementRef as RefObject<HTMLElement>,
             {
-              click: onUniversalClick,
-              input: onUniversalInput,
+              onClick: onUniversalClick,
+              onInput: onUniversalInput,
             },
             context
           );
