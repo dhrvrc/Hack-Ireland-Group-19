@@ -17,27 +17,31 @@ export function ChatInterface() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage: { role: "user" | "assistant"; content: string } = { role: "user", content: input };
-    setMessages([...messages, userMessage]);
+    const userMessage = { role: "user" as const, content: input };
+    setMessages([...messages, userMessage, { role: "assistant" as const, content: "..." }]); // Show "..." while waiting
     setLoading(true);
 
     try {
-      // Send GET request with input as a query parameter
-      const response = await axios.get("http://localhost:3000/api/chat-request", {
-        params: { message: input },
-      });
+      // Corrected Axios POST request
+      const response = await axios.post(
+        "http://127.0.0.1:8000/prompts/",
+        { prompt: input }, // Correct JSON payload
+        { headers: { "Content-Type": "application/json" } } // Ensure JSON format
+      );
 
-      // Update messages with the assistant's response
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: response.data.reply || "No response received." },
-      ]);
+      // Replace "..." with actual AI response
+      setMessages((prev) =>
+        prev.map((msg, i) =>
+          i === prev.length - 1 ? { role: "assistant", content: response.data.reply || "No response received." } : msg
+        )
+      );
     } catch (error) {
       console.error("Error fetching response:", error);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error fetching response. Please try again." },
-      ]);
+      setMessages((prev) =>
+        prev.map((msg, i) =>
+          i === prev.length - 1 ? { role: "assistant", content: "Error fetching response. Please try again." } : msg
+        )
+      );
     }
 
     setLoading(false);
@@ -59,7 +63,11 @@ export function ChatInterface() {
               </span>
             </div>
           ))}
-          {loading && <p className="text-gray-400 text-sm">Fetching response...</p>}
+          {loading && (
+            <div className="text-left mb-4">
+              <span className="inline-block p-2 rounded-lg text-white bg-gray-700">...</span>
+            </div>
+          )}
         </ScrollArea>
       </Card>
       <form onSubmit={handleSubmit} className="flex space-x-2">
