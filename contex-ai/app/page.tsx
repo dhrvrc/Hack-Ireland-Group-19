@@ -1,4 +1,5 @@
-import Link from "next/link"
+import Link from "next/link";
+import Image from "next/image"; // Import Next.js Image component
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         backgroundSize: "cover",
       }}
     >
+      {/* Sign In Button */}
       <div className="absolute top-4 right-4">
         <Link
           href="/signin"
@@ -17,6 +19,8 @@ export default function Home() {
           Sign In
         </Link>
       </div>
+
+      {/* Main Content */}
       <main className="max-w-4xl w-full space-y-8 text-center">
         <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
           Contex
@@ -43,8 +47,20 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <footer className="mt-16 text-gray-500">© 2023 Contex. All rights reserved.</footer>
-    </div>
-  )
-}
 
+      {/* Footer */}
+      <footer className="mt-16 text-gray-500">© 2023 Contex. All rights reserved.</footer>
+
+      {/* GIF in Bottom Right Corner */}
+      <div className="absolute bottom-4 right-4 w-32 h-32 pointer-events-none">
+        <Image
+          src="/cat-gif.gif" // Change this path to your GIF
+          alt="Animated AI Assistant"
+          layout="fill"
+          objectFit="contain" // Keeps transparency intact
+          priority
+        />
+      </div>
+    </div>
+  );
+}
