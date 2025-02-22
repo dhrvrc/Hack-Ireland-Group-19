@@ -1,13 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Folder, Plus, LayoutGrid, Clipboard } from "lucide-react";
+import { Home, Folder, Plus, LayoutGrid, Clipboard } from "lucide-react";
 
 export function DashboardSidebar() {
   return (
     <aside className="w-64 bg-gray-900 text-white min-h-screen p-6 border-r border-gray-800">
       <h2 className="text-lg font-semibold mb-6">Dashboard</h2>
       <nav className="space-y-4">
+        {/* Home Button */}
+        <Link href="/" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
+          <Home className="h-5 w-5 text-purple-400" />
+          <span>Home</span>
+        </Link>
         <Link href="/dashboard" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
           <LayoutGrid className="h-5 w-5 text-purple-400" />
           <span>Overview</span>
