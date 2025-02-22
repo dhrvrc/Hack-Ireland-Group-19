@@ -18,11 +18,16 @@ def fetch_response(prompt, model="o3-mini"):
         str or None: The API's response text, or None if an error occurs.
     """
     try:
-        response = client.Completion.create(
-            model=model,
-            prompt=prompt,
+        response = client.chat.completions.create(
+              model="gpt-3.5-turbo",
+             messages=[
+        {
+            "role": "user", 
+            "content": f"Generate a React component based on the following prompt: {prompt}"
+        }
+    ]
         )
-        return response.choices[0].text.strip()
+        return response.choices[0].message.content
     except Exception as e:
 
         print(f"Error fetching response: {e}")

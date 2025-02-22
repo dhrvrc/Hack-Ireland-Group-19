@@ -5,6 +5,6 @@ from . import views
 app_name = "prompts"
 router = DefaultRouter()
 
-router.register(r"prompts", views.PromptViewSet, basename="prompt")
+router.register(r"", views.PromptsViewSet, basename="prompts")
 
 urlpatterns = router.urls
