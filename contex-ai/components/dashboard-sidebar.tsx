@@ -1,60 +1,35 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
-import { Folder, Plus } from "lucide-react";
+"use client";
 
-interface DashboardSidebarProps {
-  className?: string;
-}
+import Link from "next/link";
+import { Home, Folder, Plus, LayoutGrid, Clipboard } from "lucide-react";
 
-export function DashboardSidebar({ className }: DashboardSidebarProps) {
+export function DashboardSidebar() {
   return (
-    <Sidebar className={`w-64 flex-shrink-0 bg-gray-900 border-gray-700 text-white ${className || ''}`}>
-      <SidebarHeader className="p-4">
-        <h2 className="text-lg font-semibold">Projects</h2>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-gray-300">Your Projects</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="w-full bg-gray-800 text-white border border-gray-700 hover:bg-purple-800">
-                  <Folder className="mr-2 h-4 w-4" />
-                  <span>Project 1</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="w-full bg-gray-800 text-white border border-gray-700 hover:bg-purple-800">
-                  <Folder className="mr-2 h-4 w-4" />
-                  <span>Project 2</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-gray-300">Actions</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="w-full bg-gray-900 hover:bg-purple-800">
-                  <Plus className="mr-2 h-4 w-4" />
-                  <span>New Project</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+    <aside className="w-64 bg-gray-900 text-white min-h-screen p-6 border-r border-gray-800">
+      <h2 className="text-lg font-semibold mb-6">Dashboard</h2>
+      <nav className="space-y-4">
+        {/* Home Button */}
+        <Link href="/" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
+          <Home className="h-5 w-5 text-purple-400" />
+          <span>Home</span>
+        </Link>
+        <Link href="/dashboard" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
+          <LayoutGrid className="h-5 w-5 text-purple-400" />
+          <span>Overview</span>
+        </Link>
+        <Link href="/dashboard/projects" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
+          <Folder className="h-5 w-5 text-purple-400" />
+          <span>Projects</span>
+        </Link>
+        <Link href="/dashboard/tasks" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-800 transition">
+          <Clipboard className="h-5 w-5 text-purple-400" />
+          <span>Tasks</span>
+        </Link>
+        <Link href="/dashboard/new" className="flex items-center space-x-2 p-3 rounded-lg hover:bg-purple-800 transition">
+          <Plus className="h-5 w-5 text-white" />
+          <span>New Project</span>
+        </Link>
+      </nav>
+    </aside>
   );
 }
