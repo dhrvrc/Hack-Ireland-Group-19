@@ -5,6 +5,7 @@ import { AgentButton } from "@/components/agent-ui/AgentButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AgentChart } from "@/components/agent-ui/AgentChart";
 import { Copy, LayoutGrid } from "lucide-react";
 import { LibrarySidebar } from "@/components/library-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
@@ -21,6 +22,10 @@ const components = [
   {
     name: "Input",
     code: `<Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />`,
+  },
+  {
+    name: "Chart",
+    code: `<AgentChart controlId="demo-chart" className="w-full h-80 col-span-2" />`,
   },
 ];
 
@@ -62,6 +67,7 @@ export default function LibraryPage() {
                   {component.name === "Button" && <AgentButton controlId="demo-button" className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</AgentButton>}
                   {component.name === "Card" && <Card className="p-6 border border-gray-700 bg-gray-900 text-white">This is a card.</Card>}
                   {component.name === "Input" && <Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />}
+                  {component.name === "Chart" && <AgentChart controlId="demo-chart" className="w-full h-80 lg:col-span-2" />}
                 </div>
                 {copied === component.name && <p className="mt-2 text-sm text-green-400">Copied!</p>}
               </div>

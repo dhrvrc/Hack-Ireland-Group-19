@@ -26,11 +26,11 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    color: "rgb(149, 30, 185)",
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--chart-2))",
+    color: "rgb(140, 33, 207)",
   },
 } satisfies ChartConfig
 export function BarChartComponent() {
