@@ -19,8 +19,11 @@ class PromptsViewSet(viewsets.ViewSet):
         Create a new prompt and return the generated response.
         """
         prompt_text = request.data.get("prompt", "")
+        print("Received prompt:", prompt_text)
         
         response_text = self.service.fetch_response(prompt_text)
+        print("Generated response:", response_text)
         if response_text is None:
             return Response({"error": "An error occurred while fetching the response."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        print("Response object:", Response({"response": response_text}, status=status.HTTP_200_OK))
         return Response({"response": response_text}, status=status.HTTP_200_OK)
