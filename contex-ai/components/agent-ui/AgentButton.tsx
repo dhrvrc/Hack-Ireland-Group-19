@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AgentControlled } from "@/components/ui/agent-ui/AgentController";
+import { AgentControlled } from "@/components/agent-ui/AgentController";
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";

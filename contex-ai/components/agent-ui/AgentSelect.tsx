@@ -5,7 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select";
-import { AgentControlled } from "@/components/ui/agent-ui/AgentController";
+import { AgentControlled } from "@/components/agent-ui/AgentController";
 
 export const AgentSelect = AgentControlled(Select);
 export const AgentSelectContent = AgentControlled(SelectContent);

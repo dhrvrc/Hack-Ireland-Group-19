@@ -9,7 +9,7 @@ import {
     NavigationMenuViewport,
   } from "@/components/ui/navigation-menu"
 
-  import { AgentControlled } from "@/components/ui/agent-ui/AgentController"
+  import { AgentControlled } from "@/components/agent-ui/AgentController"
 
 export const AgentNavigationMenu = AgentControlled(NavigationMenu);
 export const AgentNavigationMenuList = AgentControlled(NavigationMenuList);

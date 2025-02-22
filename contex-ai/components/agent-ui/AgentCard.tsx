@@ -6,7 +6,7 @@ import {
     CardContent,
     CardFooter,
   } from "@/components/ui/card";
-  import { AgentControlled } from "@/components/ui/agent-ui/AgentController";
+  import { AgentControlled } from "@/components/agent-ui/AgentController";
   
   export const AgentCard = AgentControlled(Card);
   export const AgentCardHeader = CardHeader;
