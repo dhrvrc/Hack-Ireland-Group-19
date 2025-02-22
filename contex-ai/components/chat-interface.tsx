@@ -14,6 +14,7 @@ export function ChatInterface() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("Form submitted");
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -28,7 +29,7 @@ export function ChatInterface() {
         { prompt: input }, // Correct JSON payload
         { headers: { "Content-Type": "application/json" } } // Ensure JSON format
     );
-    console.log("Hello", response.data.reply);
+    console.log("Hello", response.data);
 
       // Replace "..." with actual AI response
       setMessages((prev) =>
