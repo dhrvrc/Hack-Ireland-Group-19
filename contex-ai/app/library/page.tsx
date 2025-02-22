@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AgentButton } from "@/components/agent-ui/AgentButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -58,7 +59,7 @@ export default function LibraryPage() {
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-800 rounded-md">
-                  {component.name === "Button" && <Button className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</Button>}
+                  {component.name === "Button" && <AgentButton controlId="demo-button" className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md">Click Me</AgentButton>}
                   {component.name === "Card" && <Card className="p-6 border border-gray-700 bg-gray-900 text-white">This is a card.</Card>}
                   {component.name === "Input" && <Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />}
                 </div>

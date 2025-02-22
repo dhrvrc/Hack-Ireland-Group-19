@@ -6,7 +6,7 @@ import {
     ComponentType,
     PropsWithChildren,
   } from "react";
-  import { useAgentStore } from "@/stores/agentStore";
+  import { useAgentStore } from "@/hooks/AgentControlStore";
   
   // Props that the HOC needs
   export interface AgentControlProps {
