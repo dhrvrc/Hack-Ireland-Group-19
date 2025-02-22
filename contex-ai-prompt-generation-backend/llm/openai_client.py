@@ -24,6 +24,6 @@ def fetch_response(prompt, model="o3-mini"):
         )
         return response.choices[0].text.strip()
     except Exception as e:
-        # In production, consider logging the exception details.
+
         print(f"Error fetching response: {e}")
         return None
