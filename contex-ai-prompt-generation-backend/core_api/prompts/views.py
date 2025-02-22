@@ -17,7 +17,7 @@ class PromptsViewSet(viewsets.ViewSet):
     def create(self, request):
         """
         Create a new prompt and return the generated response.
-        """
+        """ 
         prompt_text = request.data.get("prompt", "")
         print("Received prompt:", prompt_text)
         
