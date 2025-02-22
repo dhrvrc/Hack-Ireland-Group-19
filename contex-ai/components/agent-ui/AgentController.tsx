@@ -36,13 +36,13 @@ import {
   
       // Add click handler
       const handleClick = () => {
-        useAgentStore.getState().triggerInteraction(controlId, "click");
+        useAgentStore.getState().trigger(controlId, "click");
         onUniversalClick?.();
       };
   
       useEffect(() => {
         if (elementRef.current) {
-          useAgentStore.getState().registerComponent(
+          useAgentStore.getState().register(
             controlId,
             elementRef as RefObject<HTMLElement>,
             {
@@ -53,10 +53,10 @@ import {
           );
   
           // Update position on mount
-          useAgentStore.getState().updatePosition(controlId);
+          useAgentStore.getState().updatePos(controlId);
   
           return () => {
-            useAgentStore.getState().unregisterComponent(controlId);
+            useAgentStore.getState().unregister(controlId);
           };
         }
       }, [controlId, onUniversalClick, onUniversalInput, context]);
