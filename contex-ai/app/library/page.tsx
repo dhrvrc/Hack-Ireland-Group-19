@@ -10,7 +10,7 @@ import { AgentSwitch } from "@/components/agent-ui/AgentSwitch";
 import { Copy, LayoutGrid } from "lucide-react";
 import { LibrarySidebar } from "@/components/library-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { AgentNavigationMenu } from "@/components/agent-ui/AgentNavMenu";
+import { AgentNavbar } from "@/components/agent-ui/AgentNavbar";
 
 const components = [
   {
@@ -34,8 +34,8 @@ const components = [
     code: `<AgentSwitch controlId="demo-toggle" className="" />`,
   },
   {
-    name: "Navigation Menu",
-    code: `<AgentNavigationMenu controlId="demo-nav-menu" className="" />`,
+    name: "Navbar",
+    code: `<AgentNavbar controlId="demo-navbar" className="" />`,
   },
 ];
 
@@ -79,7 +79,7 @@ export default function LibraryPage() {
                   {component.name === "Input" && <Input className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md" placeholder="Type here..." />}
                   {component.name === "Chart" && <AgentChart controlId="demo-chart" className="w-full h-80 lg:col-span-2" />}
                   {component.name === "Toggle" && <AgentSwitch controlId="demo-toggle" className="" />}
-                  {component.name === "Navigation Menu" && <AgentNavigationMenu controlId="demo-nav-menu" className="" />}
+                  {component.name === "Navbar" && <AgentNavbar controlId="demo-navbar" className="" />}
                 </div>
                 {copied === component.name && <p className="mt-2 text-sm text-green-400">Copied!</p>}
               </div>
