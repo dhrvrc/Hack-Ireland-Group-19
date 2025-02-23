@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAgentStore } from "@/hooks/AgentControlStore";
-import { AgentVoiceRecorder } from "./AgentVoiceRecorder";
 
 interface AgentChatPopupProps {
   onClose: () => void;
@@ -13,6 +12,8 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [input, setInput] = useState("");
+  const [recording, setRecording] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // Our Zustand store references
   const { components, queueActions } = useAgentStore();
@@ -109,6 +110,46 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
     await speakText(assistantReply);
   };
 
+  // 5) Start recording voice
+  async function startRecording() {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Web Speech API not supported");
+      return;
+    }
+
+    const recognition = new window.webkitSpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      setRecording(true);
+    };
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[event.results.length - 1][0].transcript;
+      console.log("Transcribed text from Web Speech API:", transcript);
+      handleTranscribedVoice(transcript);
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = () => {
+      setRecording(false);
+    };
+
+    recognition.start();
+  }
+
+  // 6) Stop recording voice
+  function stopRecording() {
+    setRecording(false);
+    recognitionRef.current?.stop();
+  }
+
   return (
     <div className="fixed bottom-20 right-4 w-80 bg-white border border-gray-300 rounded-md shadow-lg flex flex-col">
       {/* Header */}
@@ -163,8 +204,15 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
             </button>
           </div>
 
-          {/* The voice recorder (Whisper) */}
-          <AgentVoiceRecorder onTranscribed={handleTranscribedVoice} />
+          {/* The voice recorder */}
+          <div className="flex justify-center mt-2">
+            <button
+              onClick={recording ? stopRecording : startRecording}
+              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+            >
+              {recording ? "Stop Recording" : "Start Recording"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

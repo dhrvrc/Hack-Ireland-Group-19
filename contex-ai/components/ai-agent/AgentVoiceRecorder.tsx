@@ -1,6 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
+
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+  }
+
+  type SpeechRecognition = any;
+  type SpeechRecognitionEvent = any;
+  type SpeechRecognitionErrorEvent = any;
+}
 
 export function AgentVoiceRecorder({
   onTranscribed,
@@ -8,71 +18,44 @@ export function AgentVoiceRecorder({
   onTranscribed: (text: string) => void;
 }) {
   const [recording, setRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   async function startRecording() {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      alert("getUserMedia not supported");
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Web Speech API not supported");
       return;
     }
-    setRecording(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    chunksRef.current = [];
 
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        chunksRef.current.push(e.data);
-      }
+    const recognition = new window.webkitSpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      setRecording(true);
     };
-    mediaRecorder.start();
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[event.results.length - 1][0].transcript;
+      console.log("Transcribed text from Web Speech API:", transcript);
+      onTranscribed(transcript);
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = () => {
+      setRecording(false);
+    };
+
+    recognition.start();
   }
 
   function stopRecording() {
     setRecording(false);
-    mediaRecorderRef.current?.stop();
-    mediaRecorderRef.current = null;
-  }
-
-  async function sendToWhisper() {
-    const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
-    const formData = new FormData();
-    formData.append("file", audioBlob, "speech.webm");
-
-    const res = await fetch("/api/agent/whisper", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    console.log("Transcribed text from Whisper:", data.text);
-
-    onTranscribed(data.text);
-    await readOutResponse(data.text);
-  }
-
-  async function readOutResponse(text: string) {
-    const response = await fetch("/api/agent/elevenlabs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to fetch audio from ElevenLabs");
-      return;
-    }
-
-    const audioData = await response.arrayBuffer();
-    const audioContext = new AudioContext();
-    const audioBuffer = await audioContext.decodeAudioData(audioData);
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-    source.start();
+    recognitionRef.current?.stop();
   }
 
   return (
@@ -82,9 +65,6 @@ export function AgentVoiceRecorder({
       ) : (
         <button onClick={stopRecording}>Stop Recording</button>
       )}
-      <button disabled={recording} onClick={sendToWhisper}>
-        Send to Whisper
-      </button>
     </div>
   );
 }
