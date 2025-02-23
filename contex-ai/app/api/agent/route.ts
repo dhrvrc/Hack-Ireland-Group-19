@@ -26,11 +26,22 @@ export async function POST(req: NextRequest) {
         - targetId: string (the controlId of the element)
         - text?: string (only for "type" action)
         - navigateUrl?: string (only for "navigate")
+
       Example:
       [
         { "type": "click", "targetId": "home-button" },
         { "type": "type", "targetId": "my-input", "text": "Hello" }
       ]
+
+      # Additional instruction:
+      If the user wants to go to the Library page, do it by clicking
+      the button with controlId "library-button". 
+      For example, return:
+      [
+        { "type": "click", "targetId": "library-button" }
+      ]
+
+      Respond only with valid JSON, no extra text.
     `;
 
     const userPrompt = `User command: "${userCommand}"`;

@@ -72,7 +72,9 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
             >
               {msg.role === "user" ? "You:" : "Assistant:"}
             </div>
-            <div className="ml-4 whitespace-pre-line">{msg.content}</div>
+            <div className="ml-4 text-black whitespace-pre-line">
+              {msg.content}
+            </div>
           </div>
         ))}
       </div>

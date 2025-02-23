@@ -1,4 +1,6 @@
 // src/components/agent/AgentController.tsx
+"use client";
+
 import {
   useEffect,
   useRef,
