@@ -34,14 +34,11 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { Inter } from "next/font/google"
-<<<<<<< HEAD
 import { ThemeProvider } from "@/components/theme-provider"
 import { AgentProcessor } from "@/components/ai-agent/AgentProcessor"
 import { AgentCursor } from "@/components/ai-agent/AgentCursor"
 import { AgentChatButton } from "@/components/ai-agent/AgentChatButton"
-=======
 import { ClerkProvider } from "@clerk/nextjs"
->>>>>>> main
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -56,7 +53,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-<<<<<<< HEAD
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         {/* Optionally replicate the style tag you had before, 
@@ -96,12 +92,10 @@ export default function RootLayout({
         <AgentCursor />
         <AgentChatButton />
       </body>
-=======
     <html lang="en" className="dark">
       <ClerkProvider>
         <body className={`${inter.className} bg-gray-900 text-gray-100`}>{children}</body>
       </ClerkProvider>
->>>>>>> main
     </html>
   )
 }
