@@ -8,8 +8,8 @@ interface AgentContextProps {
 
 // Forward the ref to the div
 const AgentContextBase = forwardRef<HTMLDivElement, AgentContextProps>(
-  (_props, ref) => {
-    return <div ref={ref} style={{ display: "none" }} />;
+  ({ context }, ref) => {
+    return <div ref={ref} style={{ display: "none" }} data-context={context} />;
   }
 );
 
