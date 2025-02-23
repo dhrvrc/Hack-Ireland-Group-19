@@ -145,8 +145,8 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
       .map((c) => c.context)
       .join("\n");
 
-    // Post to /api/agent/parse
-    const res = await fetch("/api/agent/parse", {
+    // Post to /api/agent
+    const res = await fetch("/api/agent", {
       method: "POST",
       body: JSON.stringify({
         userCommand: commandText,
