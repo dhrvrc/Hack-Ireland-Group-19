@@ -11,3 +11,8 @@ django-request-logging
 django-storages
 djangorestframework
 djangorestframework-simplejwt
+faiss-cpu
+numpy
+black
+flake8
+isort

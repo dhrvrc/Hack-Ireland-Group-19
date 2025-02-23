@@ -1,5 +1,6 @@
 from llm.openai_client import fetch_response
 
+
 class FetchLlmResponseService:
     """
     Service class for fetching responses from the LLM.
