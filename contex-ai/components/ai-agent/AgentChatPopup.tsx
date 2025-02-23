@@ -1,6 +1,7 @@
 // "use client";
 
 // import { useState } from "react";
+// // 1) We still import our Zustand store
 // import { useAgentStore } from "@/hooks/AgentControlStore";
 
 // interface AgentChatPopupProps {
@@ -8,35 +9,48 @@
 // }
 
 // export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
+//   // Same local state for messages + input
 //   const [messages, setMessages] = useState<
 //     { role: "user" | "assistant"; content: string }[]
 //   >([]);
 //   const [input, setInput] = useState("");
 
-//   // We'll use queueActions to feed the parsed results into our agent store
+//   // Grab the store’s queueActions
 //   const queueActions = useAgentStore((s) => s.queueActions);
+
+//   // 2) We'll need the full components map so we can gather .context from any AgentContext
+//   const components = useAgentStore((s) => s.components);
 
 //   const sendMessage = async () => {
 //     const userText = input.trim();
 //     if (!userText) return;
 //     setInput("");
 
-//     // Show the user's message
+//     // Add the user's message to the chat history
 //     setMessages((msgs) => [...msgs, { role: "user", content: userText }]);
 
 //     try {
-//       // Call our parse API in the App Router
+//       // 3) Gather the context strings from any "AgentContext" or other comps that have .context
+//       const allPageContexts = Object.values(components)
+//         .filter((comp) => comp.context) // only components with a non-empty context
+//         .map((comp) => comp.context)
+//         .join("\n");
+
+//       // 4) Call the parse API, passing both the user’s text + the gathered pageContext
 //       const res = await fetch("/api/agent", {
 //         method: "POST",
-//         body: JSON.stringify({ userCommand: userText }),
+//         body: JSON.stringify({
+//           userCommand: userText,
+//           pageContext: allPageContexts,
+//         }),
 //       });
 //       const data = await res.json();
 
-//       // data.actions => array of agent actions
+//       // 5) If GPT returns an array of actions, queue them
 //       if (data.actions) {
 //         queueActions(data.actions);
 
-//         // Show what GPT returned
+//         // Also display them in the chat as the Assistant's "raw JSON"
 //         setMessages((msgs) => [
 //           ...msgs,
 //           { role: "assistant", content: JSON.stringify(data.actions, null, 2) },
@@ -44,7 +58,7 @@
 //       }
 //     } catch (err) {
 //       console.error("Error calling parse route:", err);
-//       // Maybe display an error in the chat
+//       // You could show an error message in the chat if you like
 //     }
 //   };
 
@@ -58,7 +72,7 @@
 //         </button>
 //       </div>
 
-//       {/* Messages */}
+//       {/* Messages area */}
 //       <div className="flex-1 p-2 overflow-y-auto">
 //         {messages.map((msg, idx) => (
 //           <div key={idx} className="mb-2">
@@ -107,65 +121,109 @@
 "use client";
 
 import { useState } from "react";
-// 1) We still import our Zustand store
 import { useAgentStore } from "@/hooks/AgentControlStore";
+import { AgentVoiceRecorder } from "./AgentVoiceRecorder";
 
 interface AgentChatPopupProps {
   onClose: () => void;
 }
 
 export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
-  // Same local state for messages + input
   const [messages, setMessages] = useState<
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [input, setInput] = useState("");
 
-  // Grab the store’s queueActions
-  const queueActions = useAgentStore((s) => s.queueActions);
+  // Our Zustand store references
+  const { components, queueActions } = useAgentStore();
 
-  // 2) We'll need the full components map so we can gather .context from any AgentContext
-  const components = useAgentStore((s) => s.components);
+  // 1) A helper function to parse user commands
+  async function parseUserCommand(commandText: string) {
+    // Collect page contexts
+    const allPageContexts = Object.values(components)
+      .filter((c) => c.context)
+      .map((c) => c.context)
+      .join("\n");
 
-  const sendMessage = async () => {
+    // Post to /api/agent/parse
+    const res = await fetch("/api/agent/parse", {
+      method: "POST",
+      body: JSON.stringify({
+        userCommand: commandText,
+        pageContext: allPageContexts,
+      }),
+    });
+    const data = await res.json();
+    // data: { assistantMessage: string, actions: AgentAction[] }
+
+    // queue the actions
+    if (data.actions) {
+      queueActions(data.actions);
+    }
+
+    // Return the text message for TTS
+    return data.assistantMessage || "";
+  }
+
+  // 2) A function to speak a string using ElevenLabs
+  async function speakText(text: string) {
+    if (!text) return;
+    try {
+      const res = await fetch("/api/agent/tts", {
+        method: "POST",
+        body: JSON.stringify({ text }),
+      });
+      const ttsData = await res.json();
+      if (ttsData.audio) {
+        const audioSrc = `data:audio/mpeg;base64,${ttsData.audio}`;
+        const audio = new Audio(audioSrc);
+        audio.play();
+      }
+    } catch (err) {
+      console.error("Error with TTS:", err);
+    }
+  }
+
+  // 3) Called when user manually types input
+  const handleSend = async () => {
     const userText = input.trim();
     if (!userText) return;
     setInput("");
 
-    // Add the user's message to the chat history
+    // Add user message to the chat
     setMessages((msgs) => [...msgs, { role: "user", content: userText }]);
 
-    try {
-      // 3) Gather the context strings from any "AgentContext" or other comps that have .context
-      const allPageContexts = Object.values(components)
-        .filter((comp) => comp.context) // only components with a non-empty context
-        .map((comp) => comp.context)
-        .join("\n");
+    // Parse & get the assistant reply
+    const assistantReply = await parseUserCommand(userText);
 
-      // 4) Call the parse API, passing both the user’s text + the gathered pageContext
-      const res = await fetch("/api/agent", {
-        method: "POST",
-        body: JSON.stringify({
-          userCommand: userText,
-          pageContext: allPageContexts,
-        }),
-      });
-      const data = await res.json();
+    // Add assistant message to chat (the text part)
+    setMessages((msgs) => [
+      ...msgs,
+      { role: "assistant", content: assistantReply },
+    ]);
 
-      // 5) If GPT returns an array of actions, queue them
-      if (data.actions) {
-        queueActions(data.actions);
+    // Then speak it
+    await speakText(assistantReply);
+  };
 
-        // Also display them in the chat as the Assistant's "raw JSON"
-        setMessages((msgs) => [
-          ...msgs,
-          { role: "assistant", content: JSON.stringify(data.actions, null, 2) },
-        ]);
-      }
-    } catch (err) {
-      console.error("Error calling parse route:", err);
-      // You could show an error message in the chat if you like
-    }
+  // 4) Called when user speech is transcribed via Whisper
+  const handleTranscribedVoice = async (spokenText: string) => {
+    if (!spokenText) return;
+
+    // Put user message in chat
+    setMessages((msgs) => [...msgs, { role: "user", content: spokenText }]);
+
+    // Parse & get the reply
+    const assistantReply = await parseUserCommand(spokenText);
+
+    // Add assistant message to chat
+    setMessages((msgs) => [
+      ...msgs,
+      { role: "assistant", content: assistantReply },
+    ]);
+
+    // TTS
+    await speakText(assistantReply);
   };
 
   return (
@@ -173,15 +231,15 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
       {/* Header */}
       <div className="flex items-center justify-between p-2 bg-blue-600 text-white">
         <h3 className="font-semibold">AI Agent</h3>
-        <button className="text-white" onClick={onClose}>
+        <button onClick={onClose} className="text-white">
           ×
         </button>
       </div>
 
-      {/* Messages area */}
+      {/* Messages */}
       <div className="flex-1 p-2 overflow-y-auto">
-        {messages.map((msg, idx) => (
-          <div key={idx} className="mb-2">
+        {messages.map((msg, i) => (
+          <div key={i} className="mb-2">
             <div
               className={
                 msg.role === "user"
@@ -198,26 +256,32 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
         ))}
       </div>
 
-      {/* Input box */}
+      {/* Input / Buttons */}
       <div className="p-2 border-t border-gray-200">
-        <div className="flex gap-2">
-          <input
-            className="flex-1 text-black border border-gray-300 rounded px-2 py-1"
-            placeholder="Type your request..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                sendMessage();
-              }
-            }}
-          />
-          <button
-            onClick={sendMessage}
-            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
-          >
-            Send
-          </button>
+        <div className="flex flex-col gap-2">
+          {/* The normal text input */}
+          <div className="flex gap-2">
+            <input
+              className="flex-1 text-black border border-gray-300 rounded px-2 py-1"
+              placeholder="Type your request..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSend();
+                }
+              }}
+            />
+            <button
+              onClick={handleSend}
+              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+            >
+              Send
+            </button>
+          </div>
+
+          {/* The voice recorder (Whisper) */}
+          <AgentVoiceRecorder onTranscribed={handleTranscribedVoice} />
         </div>
       </div>
     </div>
