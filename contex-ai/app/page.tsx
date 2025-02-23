@@ -11,7 +11,7 @@ export default function Home() {
     <div
       className="min-h-screen text-white flex flex-col justify-center items-center p-4 relative"
       style={{
-        background: "radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(25,0,51,0.9) 100%), url('/path/to/dots.png')",
+        background: "radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(25,0,51,0.4) 100%), url('/path/to/dots.png')",
         backgroundSize: "cover",
       }}
     >
