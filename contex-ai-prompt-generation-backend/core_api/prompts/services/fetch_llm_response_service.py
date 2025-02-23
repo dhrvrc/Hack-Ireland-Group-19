@@ -2,19 +2,19 @@ import os
 import faiss
 import pickle
 import numpy as np
-import openai
+from openai import OpenAI
 from llm.openai_client import fetch_response 
+from llm.config import OPENAI_API_KEY
 
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def get_embedding(text: str) -> list:
     """
     Get the embedding for a given text using OpenAI's embedding API.
     """
-    response = openai.Embedding.create(
-        input=text,
-        model="text-embedding-ada-002"
-    )
-    return response['data'][0]['embedding']
+    response = client.embeddings.create(input=text,
+    model="text-embedding-ada-002")
+    return response.data[0].embedding
 
 
 class FetchLlmResponseService:
@@ -23,7 +23,7 @@ class FetchLlmResponseService:
     """
 
     @staticmethod
-    def load_rag_store(store_dir: str = 'contex-ai-prompt-generation-backend/rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
+    def load_rag_store(store_dir: str = 'rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
         """
         Loads the FAISS index and metadata from the 'rag_store' directory.
 
@@ -35,8 +35,9 @@ class FetchLlmResponseService:
         Returns:
             tuple: A tuple containing the FAISS index and the metadata dictionary.
         """
-        index_path = os.path.join(store_dir, index_filename)
-        metadata_path = os.path.join(store_dir, metadata_filename)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        index_path = os.path.join(base_dir, store_dir, index_filename)
+        metadata_path = os.path.join(base_dir, store_dir, metadata_filename)
         index = faiss.read_index(index_path)
         with open(metadata_path, 'rb') as f:
             metadata = pickle.load(f)
@@ -93,6 +94,7 @@ class FetchLlmResponseService:
             f"{prompt}\n\n"
             "Please generate a complete response based on the above context."
         )
+        print(augmented_prompt)
 
         # Call the original fetch_response with the augmented prompt.
         return fetch_response(augmented_prompt, model=model)

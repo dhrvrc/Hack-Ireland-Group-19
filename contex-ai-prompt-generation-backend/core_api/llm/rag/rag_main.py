@@ -1,11 +1,11 @@
 import faiss
 import numpy as np
 from openai import OpenAI
-from .create_chunks import chunk_text
-from .read_source import read_code_files
-from .rag_store_utils import save_faiss_index_and_metadata
-from core_api.llm.config import EMBEDDINGS_SOURCE, OPENAI_API_KEY
-import os
+from create_chunks import chunk_text
+from read_source import read_code_files
+from rag_store_utils import save_faiss_index_and_metadata
+from ..config import EMBEDDINGS_SOURCE, OPENAI_API_KEY
+
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
