@@ -23,7 +23,7 @@ class FetchLlmResponseService:
     """
 
     @staticmethod
-    def load_rag_store(store_dir: str = 'contex-ai-prompt-generation-backend/rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
+    def load_rag_store(store_dir: str = 'C:\\Users\\tomby\\OneDrive\\Desktop\\HackIreland\\Hack-Ireland-Group-19\\contex-ai-prompt-generation-backend\\rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
         """
         Loads the FAISS index and metadata from the 'rag_store' directory.
 

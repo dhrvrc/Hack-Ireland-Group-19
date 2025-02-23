@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import Link from "next/link";
@@ -6,15 +7,52 @@ import { AgentButton } from "@/components/agent-ui/AgentButton";
 
 export default function Home() {
   const router = useRouter();
+=======
+"use client"
+
+import Link from "next/link";
+import Image from "next/image"; // Import Next.js Image component
+import { useAuth, SignOutButton } from "@clerk/nextjs"
+
+export default function Home() {
+  const { isSignedIn } = useAuth()
+
+>>>>>>> main
   return (
     <div
       className="min-h-screen text-white flex flex-col justify-center items-center p-4 relative"
       style={{
+<<<<<<< HEAD
         background:
           "radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(25,0,51,0.9) 100%), url('/path/to/dots.png')",
         backgroundSize: "cover",
       }}
     >
+=======
+        background: "radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(25,0,51,0.4) 100%), url('/path/to/dots.png')",
+        backgroundSize: "cover",
+      }}
+    >
+      {/* Auth Button */}
+      <div className="absolute top-4 right-4">
+        {isSignedIn ? (
+          <SignOutButton>
+            <button className="px-6 py-2 text-lg font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg">
+              Sign Out
+            </button>
+          </SignOutButton>
+        ) : (
+          <Link
+            href="/signin"
+            className="px-6 py-2 text-lg font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Sign In
+          </Link>
+        )}
+      </div>
+
+      {/* Main Content */}
+>>>>>>> main
       <main className="max-w-4xl w-full space-y-8 text-center">
         <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
           Contex

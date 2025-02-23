@@ -7,7 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-br from-purple-800 to-black">
+    <div className="bg-gradient-to-br from-purple-800 to-gray-900">
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <DashboardSidebar />
