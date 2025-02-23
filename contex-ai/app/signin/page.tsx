@@ -38,6 +38,13 @@ export default function SignIn() {
               <span>Continue with Microsoft</span>
             </button>
           </SignInButton>
+
+          <SignInButton>
+            <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50">
+              <Image src="/github.svg" alt="GitHub" width={20} height={20} />
+              <span>Continue with GitHub</span>
+            </button>
+          </SignInButton>
         </div>
       </div>
     </div>
