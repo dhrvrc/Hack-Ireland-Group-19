@@ -151,7 +151,7 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
   }
 
   return (
-    <div className="fixed bottom-20 right-4 w-80 bg-white border border-gray-300 rounded-md shadow-lg flex flex-col">
+    <div className="fixed bottom-20 left-4 w-80 bg-white border border-gray-300 rounded-md shadow-lg flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-2 bg-blue-600 text-white">
         <h3 className="font-semibold">AI Agent</h3>

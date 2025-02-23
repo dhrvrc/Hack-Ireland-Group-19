@@ -49,6 +49,8 @@ export async function POST(req: NextRequest) {
       Similarly, if the user wants to go to the Generator page, do it by clicking
       the button with controlId "generator-button".
 
+      If the user wants to go back to the home page, do so by clicking the button with controlId "home-button".
+
       Respond only with valid JSON, no extra text.
     `;
 
@@ -64,7 +66,7 @@ export async function POST(req: NextRequest) {
 
     // 4) Call the OpenAI Chat Completion API.
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0,
       messages: [
         { role: "system", content: finalSystemPrompt },

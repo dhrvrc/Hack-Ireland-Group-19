@@ -11,7 +11,7 @@ export function AgentChatButton() {
     <>
       <button
         onClick={() => setIsOpen((o) => !o)}
-        className="fixed bottom-4 right-4 w-14 h-14 rounded-full bg-blue-600 text-white
+        className="fixed bottom-4 left-4 w-14 h-14 rounded-full bg-blue-600 text-white
                    flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
       >
         {isOpen ? "×" : "AI"}

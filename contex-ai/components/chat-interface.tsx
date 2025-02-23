@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,34 +9,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Copy } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import ReactJsxParser from "react-jsx-parser";
-import parse from 'html-react-parser';
 
-// Import external chart components and others
-import { Line, Bar, Pie, Doughnut, Radar, PolarArea } from "react-chartjs-2";
-import { PieChart } from "react-minimal-pie-chart";
-
-// Define a comprehensive list of common components for dynamic rendering
-const commonComponents = {
-  // Your UI components
-  Button,
-  Input,
-  Card,
-  ScrollArea,
-  Copy,
-  // Chart components from react-chartjs-2
-  Line,
-  Bar,
-  Pie,
-  Doughnut,
-  Radar,
-  PolarArea,
-  // Chart component from react-minimal-pie-chart
-  PieChart,
-  // Add more components as needed...
-};
-
-// Function to extract only the JSX inside a return statement (if available)
+// Utility functions to extract and sanitize JSX from the message content
 const extractJSX = (code: string): string => {
   const match = code.match(/return\s*\(([\s\S]+?)\)\s*;?\s*$/m);
   if (match && match[1]) {
@@ -46,43 +19,36 @@ const extractJSX = (code: string): string => {
   return code;
 };
 
-// Sanitize the JSX code to remove problematic tags (like <html>, <head>, or <body>)
 const sanitizeJSX = (code: string): string => {
-  // If there's a <body> tag, extract its inner content
   const bodyMatch = code.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   if (bodyMatch && bodyMatch[1]) {
     return bodyMatch[1].trim();
   }
-  // Otherwise remove any <html>, <head>, or <body> tags
   return code.replace(/<\/?(html|head|body)[^>]*>/gi, '');
 };
 
 export function ChatInterface() {
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant"; content: string }[]
-  >(() => {
-    // Load saved messages from localStorage on component mount
-    const saved = localStorage.getItem('chatMessages');
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>(() => {
+    const saved = localStorage.getItem("chatMessages");
     return saved ? JSON.parse(saved) : [];
   });
-
-  // Add useEffect to save messages whenever they change
-  React.useEffect(() => {
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
-  }, [messages]);
-
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    localStorage.setItem("chatMessages", JSON.stringify(messages));
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
+    // Echo the user message as a purple bubble
     const userMessage = { role: "user" as const, content: input };
     setMessages((prev) => [
       ...prev,
       userMessage,
-      { role: "assistant", content: "..." },
+      { role: "assistant", content: "..." } // placeholder for assistant response
     ]);
     setLoading(true);
 
@@ -100,6 +66,7 @@ export function ChatInterface() {
         ? extractedCode[1]
         : response.data.response;
 
+      // Replace the placeholder assistant message with the actual response
       setMessages((prev) =>
         prev.map((msg, i) =>
           i === prev.length - 1
@@ -130,46 +97,51 @@ export function ChatInterface() {
     <div className="h-full flex flex-col p-4 bg-gradient-to-b from-purple-900 to-black text-white">
       <Card className="flex-1 mb-4 p-4 overflow-hidden bg-gray-900 border-gray-700 shadow-lg">
         <ScrollArea className="h-full">
-          {messages.map((message, index) => (
-            <div key={index} className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}>
-              {message.role === "assistant" && message.content.includes("export default") ? (
-                <div>
-                  <div className="relative bg-gray-800 rounded-lg p-2">
+          {messages.map((message, index) => {
+            if (message.role === "user") {
+              return (
+                <div key={index} className="mb-4 text-right">
+                  <span className="inline-block text-sm p-2 rounded-lg text-white bg-purple-800">
+                    {message.content}
+                  </span>
+                </div>
+              );
+            }
+            // For assistant messages containing code markers, display code block with a copy button on the left.
+            if (message.role === "assistant" && (message.content.includes("export default") || message.content.includes("<"))) {
+              return (
+                <div key={index} className="mb-4 text-left">
+                  <div className="relative bg-gray-800 rounded-lg p-2 pt-16">
                     <SyntaxHighlighter language="jsx" style={dracula} className="rounded-lg text-sm p-3">
                       {message.content}
                     </SyntaxHighlighter>
                     <Button
                       onClick={() => handleCopy(message.content)}
-                      className="absolute top-2 right-2 bg-gray-700 text-white hover:bg-gray-600 p-1 rounded"
+                      className="absolute top-2 left-2 z-10 bg-gray-700 text-white hover:bg-gray-600 p-1 rounded"
                       variant="ghost"
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="mt-4 p-2 bg-gray-800 rounded-lg">
-                    {parse(sanitizeJSX(extractJSX(message.content)))}
-                  </div>
                 </div>
-              ) : message.role === "assistant" && message.content.includes("<") ? (
-                <div className="relative bg-gray-800 rounded-lg p-2">
-                  <SyntaxHighlighter language="jsx" style={dracula} className="rounded-lg text-sm p-3">
-                    {message.content}
-                  </SyntaxHighlighter>
-                  <Button
-                    onClick={() => handleCopy(message.content)}
-                    className="absolute top-2 right-2 bg-gray-700 text-white hover:bg-gray-600 p-1 rounded"
-                    variant="ghost"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <span className={`inline-block text-sm p-2 rounded-lg text-white ${message.role === "user" ? "bg-purple-800" : "bg-gray-700"}`}>
+              );
+            }
+            // For plain text assistant messages, show a copy button on the left as well.
+            return (
+              <div key={index} className="relative mb-4 text-left">
+                <span className="inline-block text-sm p-2 rounded-lg text-white bg-gray-700 pt-16">
                   {message.content}
                 </span>
-              )}
-            </div>
-          ))}
+                <Button
+                  onClick={() => handleCopy(message.content)}
+                  className="absolute top-2 left-2 z-10 bg-gray-700 text-white hover:bg-gray-600 p-1 rounded"
+                  variant="ghost"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            );
+          })}
           {loading && (
             <div className="text-left mb-4">
               <span className="inline-block p-2 rounded-lg text-white bg-gray-700">...</span>
