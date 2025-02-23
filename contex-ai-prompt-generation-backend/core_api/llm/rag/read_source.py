@@ -1,3 +1,4 @@
+import os
 def read_code_files(directory):
     documents = []
     for root, _, files in os.walk(directory):
