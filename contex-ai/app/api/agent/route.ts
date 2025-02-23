@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
 
     // 4) Call the OpenAI Chat Completion API
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       temperature: 0,
       messages: [
         { role: "system", content: finalSystemPrompt },

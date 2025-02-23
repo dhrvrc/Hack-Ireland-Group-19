@@ -24,15 +24,6 @@ export default function Home() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-8">
           <div className="text-center">
-            {/* <Link
-              href="/generator"
-              className="block px-12 py-8 text-2xl font-semibold rounded-xl bg-gradient-to-r from-purple-300 to-pink-400 hover:from-purple-400 hover:to-pink-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
-            >
-              <span>Generate</span>
-              <p className="mt-2 text-lg">
-                Generate React components that are AI agent-friendly.
-              </p>
-            </Link> */}
             <AgentButton
               controlId="generator-button"
               className="block px-12 py-12 pb-24 text-2xl font-semibold rounded-xl bg-gradient-to-r from-purple-300 to-pink-400 hover:from-purple-400 hover:to-pink-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
@@ -48,13 +39,6 @@ export default function Home() {
             </AgentButton>
           </div>
           <div className="text-center">
-            {/* <Link
-              href="/library"
-              className="block px-12 py-8 text-2xl font-semibold rounded-xl bg-gradient-to-r from-purple-300 to-pink-400 hover:from-purple-400 hover:to-pink-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
-            >
-              <span>Library</span>
-              <p className="mt-2 text-lg">Access a library of AI agent-friendly components.</p>
-            </Link> */}
             <AgentButton
               controlId="library-button"
               className="block px-12 py-12 pb-24 text-2xl font-semibold rounded-xl bg-gradient-to-r from-purple-300 to-pink-400 hover:from-purple-400 hover:to-pink-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
