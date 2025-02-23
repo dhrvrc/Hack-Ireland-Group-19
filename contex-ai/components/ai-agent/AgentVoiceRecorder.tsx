@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export function AgentVoiceRecorder({
   onTranscribed,
@@ -49,6 +49,30 @@ export function AgentVoiceRecorder({
     console.log("Transcribed text from Whisper:", data.text);
 
     onTranscribed(data.text);
+    await readOutResponse(data.text);
+  }
+
+  async function readOutResponse(text: string) {
+    const response = await fetch("/api/agent/elevenlabs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch audio from ElevenLabs");
+      return;
+    }
+
+    const audioData = await response.arrayBuffer();
+    const audioContext = new AudioContext();
+    const audioBuffer = await audioContext.decodeAudioData(audioData);
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
   }
 
   return (
