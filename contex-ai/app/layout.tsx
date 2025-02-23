@@ -32,7 +32,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-gray-900 text-gray-100 min-h-screen w-full overflow-x-hidden !m-0 !p-0`}>
         <ClerkProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="system">
             <main className="flex-1 w-full overflow-x-hidden">
               {children}
             </main>
