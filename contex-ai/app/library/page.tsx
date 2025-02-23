@@ -12,6 +12,7 @@ import { LibrarySidebar } from "@/components/library-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { AgentNavbar } from "@/components/agent-ui/AgentNavbar";
 import { AgentContext } from "@/components/agent-ui/AgentContext";
+import { AgentInput } from "@/components/agent-ui/AgentInput";
 
 const components = [
   {
@@ -43,6 +44,7 @@ const components = [
 export default function LibraryPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState(false);
+  const [text, setText] = useState("");
 
   const handleCopy = (code: string, name: string) => {
     navigator.clipboard.writeText(code);
@@ -57,8 +59,8 @@ export default function LibraryPage() {
         context={`
           PAGE: Library
           Has controls:
-            - "click-me-button"
-            - "library-input"
+            - "click-me-button", the user can click this button.
+            - "library-input", the user can type whatever they want in this input. May also be referred to as search bar.
             - "chart-toggle"
         `}
       />
@@ -110,7 +112,13 @@ export default function LibraryPage() {
                       </Card>
                     )}
                     {component.name === "Input" && (
-                      <Input
+                      <AgentInput
+                        controlId="library-input"
+                        value={text}
+                        onUniversalInput={(val) => {
+                          setText(val);
+                          console.log("Library input typed:", val);
+                        }}
                         className="p-2 bg-gray-800 text-white border border-gray-700 rounded-md"
                         placeholder="Type here..."
                       />
