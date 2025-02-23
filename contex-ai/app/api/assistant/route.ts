@@ -14,13 +14,13 @@ export async function GET(req: Request) {
     }
   );
 
-  return NextResponse.json(message.content);
+  return NextResponse.json(message);
 }
 
 async function getAssistant() {
     const assistant = await openai.beta.assistants.create({
         name: "Contex",
-        instructions: "You are a software developer who creates components which are to be used by AI. Write your components and include appropriate AgentContext blocks around them.",
+        instructions: "You are a software developer who creates Next.JS web components which are to be used by AI. Write your components and include appropriate AgentContext blocks around them.",
         tools: [{ type: "code_interpreter" }],
         model: "gpt-4o"
       });
