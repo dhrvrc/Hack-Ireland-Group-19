@@ -23,7 +23,7 @@ class FetchLlmResponseService:
     """
 
     @staticmethod
-    def load_rag_store(store_dir: str = 'rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
+    def load_rag_store(store_dir: str = 'contex-ai-prompt-generation-backend/rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
         """
         Loads the FAISS index and metadata from the 'rag_store' directory.
 
@@ -44,7 +44,7 @@ class FetchLlmResponseService:
         return index, metadata
 
     @staticmethod
-    def retrieve_context(prompt: str, index, metadata, top_k: int = 5) -> str:
+    def retrieve_context(prompt: str, index, metadata, top_k: int = 7) -> str:
         """
         Retrieves relevant context for the given prompt using FAISS.
 
@@ -84,7 +84,7 @@ class FetchLlmResponseService:
         index, metadata = FetchLlmResponseService.load_rag_store()
 
         # Retrieve relevant context for the prompt.
-        context = FetchLlmResponseService.retrieve_context(prompt, index, metadata, top_k=5)
+        context = FetchLlmResponseService.retrieve_context(prompt, index, metadata, top_k=7)
 
         # Build the augmented prompt with the retrieved context.
         augmented_prompt = (
@@ -92,7 +92,7 @@ class FetchLlmResponseService:
             f"{context}\n\n"
             "User Request:\n"
             f"{prompt}\n\n"
-            "Please generate a complete response based on the above context."
+            "Please generate a complete response based on the above context I only want code snippets, no other text at all. "
         )
         print(augmented_prompt)
 
