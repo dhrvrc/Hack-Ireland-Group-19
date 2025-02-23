@@ -16,7 +16,7 @@ export function LibrarySidebar() {
             size="lg"
             controlId="home-button"
             onUniversalClick={() => router.push("/")}
-            className="flex text-md items-center bg-purple-800 space-x-2 p-3 rounded-lg transition"
+            className="flex bg-transparent text-md items-center space-x-2 p-3 rounded-lg transition hover:bg-transparent"
         >
           <Home className="h-5 w-5 text-purple-400" />
           Home

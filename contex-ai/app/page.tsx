@@ -20,7 +20,7 @@ export default function Home() {
       <div className="absolute top-4 right-4">
         {isSignedIn ? (
           <SignOutButton>
-            <button className="px-6 py-2 text-lg font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg">
+            <button className="block px-12 py-12 pb-24 text-lg font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg">
               Sign Out
             </button>
           </SignOutButton>

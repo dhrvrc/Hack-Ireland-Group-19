@@ -151,9 +151,9 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
   }
 
   return (
-    <div className="fixed bottom-20 left-4 w-80 bg-white border border-gray-300 rounded-md shadow-lg flex flex-col">
+    <div className="fixed bottom-20 left-4 w-80 bg-white border rounded-lg shadow-lg shadow-purple-600 flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-2 bg-blue-600 text-white">
+      <div className="flex items-center justify-between p-2 bg-purple-600 text-white">
         <h3 className="font-semibold">AI Agent</h3>
         <button onClick={onClose} className="text-white">
           ×
@@ -186,7 +186,7 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
           {/* The normal text input */}
           <div className="flex gap-2">
             <input
-              className="flex-1 text-black border border-gray-300 rounded px-2 py-1"
+              className="flex-1 text-black bg-white border border-gray-300 rounded px-2 py-1"
               placeholder="Type your request..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -198,7 +198,7 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
             />
             <button
               onClick={handleSend}
-              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-500 transition-colors"
             >
               Send
             </button>
@@ -208,7 +208,7 @@ export function AgentChatPopup({ onClose }: AgentChatPopupProps) {
           <div className="flex justify-center mt-2">
             <button
               onClick={recording ? stopRecording : startRecording}
-              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-500 transition-colors"
             >
               {recording ? "Stop Recording" : "Start Recording"}
             </button>
