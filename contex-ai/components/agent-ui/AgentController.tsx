@@ -1,3 +1,4 @@
+// src/components/agent/AgentController.tsx
 import {
   useEffect,
   useRef,
@@ -6,54 +7,53 @@ import {
   ComponentType,
   PropsWithChildren,
   RefCallback,
-} from "react"
-import { useAgentStore } from "@/hooks/AgentControlStore"
+} from "react";
+import { useAgentStore } from "@/hooks/AgentControlStore";
 
-// Props that the HOC needs
 export interface AgentControlProps {
-  controlId: string
-  onUniversalClick?: () => void
-  onUniversalInput?: (value: string) => void
-  context?: string
-  "data-hovered"?: boolean
-  className?: string
+  controlId: string;
+  onUniversalClick?: () => void;
+  onUniversalInput?: (value: string) => void;
+  context?: string;
+  className?: string;
 }
 
-// Helper function to merge refs
+// Merges multiple refs into one
 function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]): RefCallback<T> {
   return (value: T) => {
-    refs.forEach(ref => {
+    refs.forEach((ref) => {
       if (typeof ref === "function") {
-        ref(value)
+        ref(value);
       } else if (ref && "current" in ref) {
-        (ref as React.MutableRefObject<T>).current = value
+        (ref as React.MutableRefObject<T>).current = value;
       }
-    })
-  }
+    });
+  };
 }
 
-// Use Record<string, any> to allow any additional props
+// HOC that "registers" a component with our Agent store
 export function AgentControlled<P extends Record<string, any>>(
   WrappedComponent: ComponentType<PropsWithChildren<P>>
 ) {
-  type CombinedProps = AgentControlProps & PropsWithChildren<P>
+  type CombinedProps = AgentControlProps & PropsWithChildren<P>;
 
   return forwardRef<any, CombinedProps>((props, ref) => {
-    const { controlId, onUniversalClick, onUniversalInput, context, ...rest } = props
-    const localRef = useRef<HTMLElement>(null)
-    const combinedRef = mergeRefs(ref, localRef)
+    const { controlId, onUniversalClick, onUniversalInput, context, ...rest } =
+      props;
 
-    // Subscribe to the component's state in the store
+    const localRef = useRef<HTMLElement>(null);
+    const combinedRef = mergeRefs(ref, localRef);
+
     const componentState = useAgentStore(
       (state) => state.components[controlId]?.state
-    )
+    );
 
-    // Intercept click events
     const handleClick = () => {
-      useAgentStore.getState().trigger(controlId, "click")
-      onUniversalClick?.()
-    }
+      useAgentStore.getState().trigger(controlId, "click");
+      onUniversalClick?.();
+    };
 
+    // Register with the store on mount
     useEffect(() => {
       if (localRef.current) {
         useAgentStore.getState().register(
@@ -64,14 +64,15 @@ export function AgentControlled<P extends Record<string, any>>(
             onInput: onUniversalInput,
           },
           context
-        )
-        // Update position on mount
-        useAgentStore.getState().updatePos(controlId)
+        );
+        // Update position once on mount
+        useAgentStore.getState().updatePos(controlId);
+
         return () => {
-          useAgentStore.getState().unregister(controlId)
-        }
+          useAgentStore.getState().unregister(controlId);
+        };
       }
-    }, [controlId, onUniversalClick, onUniversalInput, context])
+    }, [controlId, onUniversalClick, onUniversalInput, context]);
 
     return (
       <WrappedComponent
@@ -80,6 +81,6 @@ export function AgentControlled<P extends Record<string, any>>(
         data-hovered={componentState?.isHovered}
         {...(rest as unknown as PropsWithChildren<P>)}
       />
-    )
-  })
+    );
+  });
 }
