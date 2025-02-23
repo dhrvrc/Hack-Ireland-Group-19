@@ -49,7 +49,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-16 text-gray-500">© 2023 Contex. All rights reserved.</footer>
+      <footer className="mt-16 text-gray-500">© 2025 Contex. All rights reserved.</footer>
 
       {/* GIF in Bottom Right Corner */}
       <div className="absolute bottom-4 right-4 w-32 h-32 pointer-events-none">

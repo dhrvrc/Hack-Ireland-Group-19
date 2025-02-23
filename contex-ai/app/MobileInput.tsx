@@ -5,7 +5,7 @@ import { Mic } from "lucide-react";
 import { useAgentStore } from "@/stores/agentStore";
 import { useParams, useNavigate } from "react-router-dom";
 import { WhisperService } from "@/lib/whisperService";
-import { ElevenLabsService } from "@/lib/elevenLabsService";
+
 
 const whisperService = new WhisperService(process.env.OPENAI_API_KEY || "");
 const elevenLabsService = new ElevenLabsService(process.env.ELEVENLABS_API_KEY || "");
@@ -141,6 +141,7 @@ export default function MobileInput() {
 
             const audioContent = await elevenLabsService.generateSpeechFromText(aiResponse.choices[0].message.content);
             // Handle the audioContent as needed
+
           } else {
             console.log("Failed to transcribe audio");
           }

@@ -30,8 +30,7 @@ export default function RootLayout({
         className={`
           ${inter.className} 
           min-h-screen 
-          w-screen
-          max-w-screen
+          w-full
           overflow-x-hidden
           !m-0 
           !p-0 
@@ -41,7 +40,7 @@ export default function RootLayout({
         `}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <main className="flex-1 w-full max-w-full">
+          <main className="flex-1 w-full overflow-x-hidden">
             {children}
           </main>
         </ThemeProvider>

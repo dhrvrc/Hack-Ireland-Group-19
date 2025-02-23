@@ -1,8 +1,11 @@
 from typing import Optional
+
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
+
 from .services.fetch_llm_response_service import FetchLlmResponseService
+
 
 class PromptsViewSet(viewsets.ViewSet):
     """
