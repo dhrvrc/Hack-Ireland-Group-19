@@ -134,6 +134,8 @@ export async function POST(req: NextRequest) {
       Similarly, if the user wants to go to the Genrator page, do it by clicking
       the button with controlId "generator-button".
 
+      If the user wants to go back to the home page, do so by clicking the button with controlId "home-button".
+
       Respond only with valid JSON, no extra text.
     `;
 
