@@ -1,13 +1,9 @@
-// src/components/agent/AgentCursor.tsx
 "use client";
 
 import React from "react";
 import { useAgentStore } from "@/hooks/AgentControlStore";
+import { Pointer } from 'lucide-react';
 
-/**
- * A simple "dot" that is absolutely positioned
- * at the (x,y) from the agent store's "cursor".
- */
 export function AgentCursor() {
   const { x, y } = useAgentStore((s) => s.cursor);
 
@@ -17,16 +13,18 @@ export function AgentCursor() {
         position: "fixed",
         left: x,
         top: y,
-        width: 20,
-        height: 20,
-        backgroundColor: "rgba(255, 0, 0, 0.7)",
-        borderRadius: "50%",
         transform: "translate(-50%, -50%)",
         pointerEvents: "none",
-        zIndex: 9999, // on top of everything
-        // optional transition if you want smoother movement
-        // transition: 'left 0.1s, top 0.1s'
+        zIndex: 9999,
+        transition: 'left 0.1s ease-out, top 0.1s ease-out', // smooth movement
       }}
-    />
+    >
+      <Pointer 
+        size={24}  // adjust size as needed
+        color="white"  // adjust color as needed
+        strokeWidth={1.5}  // adjust stroke thickness as needed
+        fill="rgba(255, 255, 255, 0.1)"  // optional: adds a slight fill
+      />
+    </div>
   );
 }
