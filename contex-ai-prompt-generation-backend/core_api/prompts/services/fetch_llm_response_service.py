@@ -22,8 +22,29 @@ class FetchLlmResponseService:
     Service class for fetching responses from the LLM with Retrieval-Augmented Generation (RAG).
     """
 
+    # @staticmethod
+    # def load_rag_store(store_dir: str = '/Users/sebas/Hack-Ireland-Group-19/contex-ai-prompt-generation-backend/rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
+    #     """
+    #     Loads the FAISS index and metadata from the 'rag_store' directory.
+
+    #     Args:
+    #         store_dir (str): Directory where the FAISS index and metadata are stored.
+    #         index_filename (str): Filename of the FAISS index.
+    #         metadata_filename (str): Filename of the metadata pickle.
+
+    #     Returns:
+    #         tuple: A tuple containing the FAISS index and the metadata dictionary.
+    #     """
+    #     base_dir = os.path.dirname(os.path.abspath(__file__))
+    #     index_path = os.path.join(base_dir, store_dir, index_filename)
+    #     metadata_path = os.path.join(base_dir, store_dir, metadata_filename)
+    #     index = faiss.read_index(index_path)
+    #     with open(metadata_path, 'rb') as f:
+    #         metadata = pickle.load(f)
+    #     return index, metadata
+    
     @staticmethod
-    def load_rag_store(store_dir: str = '/Users/dhruv/Documents/Hackathons/Hack-Ireland-Group-19/contex-ai-prompt-generation-backend/rag_store', index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
+    def load_rag_store(store_dir: str = None, index_filename: str = 'faiss_index.index', metadata_filename: str = 'metadata.pkl'):
         """
         Loads the FAISS index and metadata from the 'rag_store' directory.
 
@@ -35,9 +56,17 @@ class FetchLlmResponseService:
         Returns:
             tuple: A tuple containing the FAISS index and the metadata dictionary.
         """
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        index_path = os.path.join(base_dir, store_dir, index_filename)
-        metadata_path = os.path.join(base_dir, store_dir, metadata_filename)
+        if store_dir is None:
+            # Find the project root by looking for characteristic directory/file
+            # Get path to the current file
+            current_path = os.path.abspath(__file__)
+            # Navigate up until we find the project directory
+            project_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_path))))
+            store_dir = os.path.join(project_path, 'rag_store')
+        
+        index_path = os.path.join(store_dir, index_filename)
+        metadata_path = os.path.join(store_dir, metadata_filename)
+        
         index = faiss.read_index(index_path)
         with open(metadata_path, 'rb') as f:
             metadata = pickle.load(f)
